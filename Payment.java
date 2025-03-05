@@ -1,8 +1,11 @@
+
+// Before SRP Fix: Payment logic was inside Order.
+// SRP Fix: Payment logic is now separate.
+// and now 
+// OCP is not violated as new payment methods can be added without modifying this class.
 public class Payment {
-    public static boolean processPayment(Customer customer, double amount) {
-        // Before SRP Fix: Payment logic was inside Order.
-        // SRP Fix: Payment logic is now separate.
-        System.out.println("Processed payment of $" + String.format("%.2f", amount) + " for " + customer.getUsername());
-        return true;
+
+    public static boolean processPayment(PaymentMethod paymentMethod, Customer customer, double amount) {
+        return paymentMethod.processPayment(customer, amount);
     }
 }

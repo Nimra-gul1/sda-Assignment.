@@ -1,4 +1,7 @@
+
+// OCP is not violated since responsibilities are properly delegated and extendable.
 public class Bookstore {
+
     public static void main(String[] args) {
         // Before SRP Violation:
         // The main class was handling too many responsibilities directly:
@@ -23,9 +26,17 @@ public class Bookstore {
         //
         // After SRP Resolution:
         // The Admin now delegates inventory tasks to InventoryManager, keeping responsibilities separate.
-
         Admin admin = new Admin("admin", "admin123", inventoryManager);
         Customer customer = new Customer("john_doe", "password123", "john@example.com");
+        // Initialize PaymentProcessor
+
+        // Use CreditCardPayment
+        PaymentMethod creditCard = new CreditCardPayment();
+        paymentProcessor.processPayment(creditCard, customer, 100.0);
+
+        // Use PayPalPayment
+        PaymentMethod payPal = new PayPalPayment();
+        paymentProcessor.processPayment(payPal, customer, 50.0);
 
         // Creating book objects
         Book book1 = new Book("Java Basics", "John Smith", 20.99);
@@ -37,8 +48,7 @@ public class Bookstore {
         Book book7 = new Book("Algorithms and Complexity", "Eva Evans", 39.99);
         Book book8 = new Book("Web Development with React", "Frank Lee", 29.99);
         Book book9 = new Book("Artificial Intelligence", "Grace Adams", 44.99);
-        Book book10 = new Book("Machine Learning Basics", "Henry Harris", 36.99)
-;
+        Book book10 = new Book("Machine Learning Basics", "Henry Harris", 36.99);
         // Before SRP Violation:
         // The Admin was directly managing inventory.
         //
@@ -61,7 +71,6 @@ public class Bookstore {
         //
         // After SRP Resolution:
         // Now, OrderProcessor is responsible for order creation and completion.
-
         Order order = orderProcessor.createOrder(customer);
         order.addBookToOrder(book1);
         order.addBookToOrder(book2);
@@ -80,7 +89,8 @@ public class Bookstore {
         //
         // After SRP Resolution:
         // Payment processing is now handled separately by PaymentProcessor.
-
-        paymentProcessor.processPayment(customer, order.getTotalPrice());
     }
 }
+
+
+//OCP is not violated since responsibilities are properly delegated and extendable

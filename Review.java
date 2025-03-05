@@ -1,4 +1,7 @@
+
+//  No OCP Violation: Extending review functionality doesn't require modifying this class.
 public class Review {
+
     private final Customer reviewer;
     private final Book book;
     private final String comment;
@@ -15,7 +18,7 @@ public class Review {
         return book;
     }
 
-    public int getRating() { 
+    public int getRating() {
         return rating;
     }
 
@@ -24,4 +27,3 @@ public class Review {
         return "Review by " + reviewer.getUsername() + " for " + book.getTitle() + ": " + comment + " (Rating: " + rating + "/5)";
     }
 }
-

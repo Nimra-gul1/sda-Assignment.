@@ -1,3 +1,5 @@
+// OCP is not violated because InventoryManager is well-structured and allows extension without modification.
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,6 @@ public class InventoryManager {
     // - The book list is private and final for better control.
     // - Null checks prevent invalid books from being added.
     // - A copy of the list is returned to keep the original safe.
-
     private final List<Book> books = new ArrayList<>();
 
     public void addBook(Book book) {

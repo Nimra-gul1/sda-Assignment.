@@ -1,30 +1,35 @@
+// Now, both OCP and SRP violations are resolved! 
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    // Before SRP Violation:
-    // - No validation for null customers or books.
-    // - Order completion logic was mixed with displaying order details.
-    // - The purchased book list was directly accessible, allowing unwanted modifications.
 
-    // After SRP Fix:
-    // - Added null checks to ensure valid input for customers and books.
-    // - Introduced 'isCompleted' flag to track order status separately.
-    // - Returning a copy of purchased books list to protect data integrity.
+    private final Customer customer;
+    private final List<Book> purchasedBooks = new ArrayList<>();
+    private boolean isCompleted = false;
+    private final PriceCalculator priceCalculator;  //  OCP Fix: Delegated calculation to a separate class
 
-    private final Customer customer;  // Made final to ensure customer is assigned only once
-    private final List<Book> purchasedBooks = new ArrayList<>(); 
-    private boolean isCompleted = false; // Added to track order status
-
-    public Order(Customer customer) {
-        if (customer == null) { // Added validation to prevent null customers
-            throw new IllegalArgumentException("Customer cannot be null"); 
+    /**
+     * **Before (OCP & SRP Violation)** - `Order` handled price calculation,
+     * violating **OCP** (modifications needed for new pricing logic). - Mixed
+     * order management & pricing, violating **SRP**.
+     *
+     * **Resolution:** Introduced `PriceCalculator` interface for pricing
+     * logic. Created `StandardPriceCalculator` & `DiscountPriceCalculator` for
+     * flexibility. Now, new pricing strategies can be added **without
+     * modifying** `Order` (OCP-compliant).
+     */
+    public Order(Customer customer, PriceCalculator priceCalculator) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer cannot be null");
         }
         this.customer = customer;
+        this.priceCalculator = priceCalculator;  //  Delegated pricing logic
     }
 
     public void addBookToOrder(Book book) {
-        if (book != null) { // Added null check to prevent invalid books from being added
+        if (book != null) {
             purchasedBooks.add(book);
         } else {
             System.out.println("Cannot add a null book to the order.");
@@ -32,24 +37,20 @@ public class Order {
     }
 
     public double getTotalPrice() {
-        double totalPrice = 0;
-        for (Book book : purchasedBooks) {
-            totalPrice += book.getPrice();
-        }
-        return totalPrice;
+        return priceCalculator.calculateTotalPrice(purchasedBooks); //  Removed price calculation from Order
     }
 
     public List<Book> getPurchasedBooks() {
-        return new ArrayList<>(purchasedBooks); // Returning a copy to avoid direct modification
+        return new ArrayList<>(purchasedBooks);
     }
 
     public void completeOrder() {
-        if (purchasedBooks.isEmpty()) { // Added check to prevent empty order completion
+        if (purchasedBooks.isEmpty()) {
             System.out.println("Cannot complete an empty order.");
             return;
         }
-        
-        isCompleted = true; // Order status updated
+
+        isCompleted = true;
         System.out.println("Order for " + customer.getUsername() + " is complete.");
         for (Book book : purchasedBooks) {
             System.out.println("- " + book.getTitle() + " ($" + String.format("%.2f", book.getPrice()) + ")");
@@ -58,6 +59,12 @@ public class Order {
     }
 
     public boolean isCompleted() {
-        return isCompleted; // Added method to check order status separately
+        return isCompleted;
     }
 }
+
+//Before, the Order class handled price calculation itself, violating OCP.
+// The Order class had multiple responsibilities (order management & pricing), violating SRP.
+// Introduced a PriceCalculator interface and separate pricing classes to delegate pricing.
+// Now, new pricing logic can be added without modifying Order, ensuring OCP compliance.
+

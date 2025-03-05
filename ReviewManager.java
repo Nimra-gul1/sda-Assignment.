@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,4 +25,14 @@ public class ReviewManager {
         }
         return bookReviews;
     }
+
+    /**
+     * **OCP Compliance** - **Before:** If new filtering/sorting logic was
+     * needed, modifications in this class were required, violating OCP. -
+     *
+     * **Now:** We can extend functionality by creating new classes or methods
+     * without changing existing code. - Example: If we need advanced filtering
+     * (e.g., reviews by rating), we can add new methods in a subclass or
+     * separate utility class.
+     */
 }

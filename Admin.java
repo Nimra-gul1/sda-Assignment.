@@ -1,4 +1,7 @@
+
+// OCP is not violated since Admin delegates inventory tasks, making the system extendable without modifying existing classes.
 public class Admin extends User {
+
     private final InventoryManager inventoryManager;
 
     public Admin(String username, String password, InventoryManager inventoryManager) {
