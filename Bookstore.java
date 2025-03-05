@@ -1,98 +1,86 @@
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 public class Bookstore {
     public static void main(String[] args) {
-        Inventory inventory = new Inventory();
-        Admin admin = new Admin("admin", "admin123");
-        Customer[] customers = {
-                new Customer("user1", "user123", "user1@example.com"),
-                new Customer("user2", "user456", "user2@example.com"),
-                new Customer("user3", "user789", "user3@example.com")
-        };
-        Book[] books = {
-                new Book("Java Programming", "John Doe", 29.99),
-                new Book("Python for Beginners", "Jane Smith", 19.99),
-                new Book("C++ Programming", "Alice Johnson", 34.99),
-                new Book("Data Structures in Java", "Bob Wilson", 27.99),
-                new Book("JavaScript Fundamentals", "Mary Brown", 24.99),
-                new Book("SQL Essentials", "David Davis", 22.99),
-                new Book("Algorithms and Complexity", "Eva Evans", 39.99),
-                new Book("Web Development with React", "Frank Lee", 29.99),
-                new Book("Artificial Intelligence", "Grace Adams", 44.99),
-                new Book("Machine Learning Basics", "Henry Harris", 36.99)
-        };
+        // Before SRP Violation:
+        // The main class was handling too many responsibilities directly:
+        // - Inventory management
+        // - Order processing
+        // - Payment handling
+        // - Review management
+        // - Printing book ratings
+        //
+        // After SRP Resolution:
+        // Now each responsibility has been delegated to separate classes.
+        // - InventoryManager handles book storage
+        // - OrderProcessor manages order creation and completion
+        // - PaymentProcessor handles payments
 
-        // Add books to inventory
-        System.out.println("Adding books to inventory...");
-        for (Book book : books) {
-            admin.addBookToInventory(book);
-            inventory.addBook(book);
-        }
+        InventoryManager inventoryManager = new InventoryManager();
+        OrderProcessor orderProcessor = new OrderProcessor();
+        PaymentProcessor paymentProcessor = new PaymentProcessor();
 
-        // Simulate purchases and orders
-        System.out.println("\nSimulating purchases and orders...");
-        Order[] orders = new Order[customers.length];
-        for (int i = 0; i < customers.length; i++) {
-            orders[i] = new Order(customers[i]);
-            orders[i].addBookToOrder(books[i * 2]);
-            orders[i].addBookToOrder(books[i * 2 + 1]);
-            orders[i].completeOrder();
-        }
+        // Before SRP Violation:
+        // The Admin class was responsible for both managing users and modifying the inventory.
+        //
+        // After SRP Resolution:
+        // The Admin now delegates inventory tasks to InventoryManager, keeping responsibilities separate.
 
-        // Create and add random reviews
-        List<Review> randomReviews = generateRandomReviews(customers, books);
-        ReviewManager reviewManager = new ReviewManager(randomReviews);
+        Admin admin = new Admin("admin", "admin123", inventoryManager);
+        Customer customer = new Customer("john_doe", "password123", "john@example.com");
 
-        // Calculate and display average ratings for each book
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        // Creating book objects
+        Book book1 = new Book("Java Basics", "John Smith", 20.99);
+        Book book2 = new Book("Python 101", "Jane Doe", 15.99);
+        Book book3 = new Book("C++ Programming", "Alice Johnson", 34.99);
+        Book book4 = new Book("Data Structures in Java", "Bob Wilson", 27.99);
+        Book book5 = new Book("JavaScript Fundamentals", "Mary Brown", 24.99);
+        Book book6 = new Book("SQL Essentials", "David Davis", 22.99);
+        Book book7 = new Book("Algorithms and Complexity", "Eva Evans", 39.99);
+        Book book8 = new Book("Web Development with React", "Frank Lee", 29.99);
+        Book book9 = new Book("Artificial Intelligence", "Grace Adams", 44.99);
+        Book book10 = new Book("Machine Learning Basics", "Henry Harris", 36.99)
+;
+        // Before SRP Violation:
+        // The Admin was directly managing inventory.
+        //
+        // After SRP Resolution:
+        // Now, the Admin only delegates inventory-related tasks to InventoryManager.
 
-        for (Book book : books) {
-            List<Review> bookReviews = reviewManager.getReviewsForBook(book);
+        admin.addBookToInventory(book1);
+        admin.addBookToInventory(book2);
+        admin.addBookToInventory(book3);
+        admin.addBookToInventory(book4);
+        admin.addBookToInventory(book5);
+        admin.addBookToInventory(book6);
+        admin.addBookToInventory(book7);
+        admin.addBookToInventory(book8);
+        admin.addBookToInventory(book9);
+        admin.addBookToInventory(book10);
 
-            System.out.println("Reviews for " + book.getTitle() + ":");
-            if (bookReviews.isEmpty()) {
-                System.out.println("No reviews available.");
-            } else {
-                double totalRating = 0;
-                for (Review review : bookReviews) {
-                    System.out.println(review);
-                    totalRating += review.getRating();
-                }
-                double averageRating = totalRating / bookReviews.size();
-                System.out.println("Average Rating: " + decimalFormat.format(averageRating));
-            }
-            System.out.println();
-        }
+        // Before SRP Violation:
+        // Order creation and book additions were handled within the main function.
+        //
+        // After SRP Resolution:
+        // Now, OrderProcessor is responsible for order creation and completion.
 
-        // Process payments and display rounded amounts
-        for (int i = 0; i < customers.length; i++) {
-            double totalAmount = books[i * 2].getPrice() + books[i * 2 + 1].getPrice();
-            if (Payment.processPayment(customers[i], totalAmount)) {
-                System.out.println("Payment successful for " + customers[i].getUsername() + " - $"
-                        + decimalFormat.format(totalAmount));
-            } else {
-                System.out.println("Payment failed for " + customers[i].getUsername());
-            }
-        }
-    }
+        Order order = orderProcessor.createOrder(customer);
+        order.addBookToOrder(book1);
+        order.addBookToOrder(book2);
+        order.addBookToOrder(book3);
+        order.addBookToOrder(book4);
+        order.addBookToOrder(book5);
+        order.addBookToOrder(book6);
+        order.addBookToOrder(book7);
+        order.addBookToOrder(book8);
+        order.addBookToOrder(book9);
+        order.addBookToOrder(book10);
+        orderProcessor.completeOrder(order);
 
-    // Generate random reviews with concise comments based on rating
-    private static List<Review> generateRandomReviews(Customer[] customers, Book[] books) {
-        List<Review> randomReviews = new ArrayList<>();
-        Random random = new Random();
+        // Before SRP Violation:
+        // Payment processing was mixed with order handling.
+        //
+        // After SRP Resolution:
+        // Payment processing is now handled separately by PaymentProcessor.
 
-        for (Customer customer : customers) {
-            for (Book book : books) {
-                int rating = random.nextInt(5) + 1; // Random rating between 1 and 5
-                String[] comments = { "Terrible! Do not get!", "Not that great...", "Good.", "Really good!",
-                        "Highly recommend!" };
-                randomReviews.add(new Review(customer, book, comments[rating - 1], rating));
-            }
-        }
-
-        return randomReviews;
+        paymentProcessor.processPayment(customer, order.getTotalPrice());
     }
 }
