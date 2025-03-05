@@ -1,8 +1,8 @@
 public class Review {
-    private Customer reviewer;
-    private Book book;
-    private String comment;
-    private int rating;
+    private final Customer reviewer;
+    private final Book book;
+    private final String comment;
+    private final int rating;
 
     public Review(Customer reviewer, Book book, String comment, int rating) {
         this.reviewer = reviewer;
@@ -15,7 +15,7 @@ public class Review {
         return book;
     }
 
-    public double getRating() {
+    public int getRating() { 
         return rating;
     }
 
@@ -24,3 +24,4 @@ public class Review {
         return "Review by " + reviewer.getUsername() + " for " + book.getTitle() + ": " + comment + " (Rating: " + rating + "/5)";
     }
 }
+
