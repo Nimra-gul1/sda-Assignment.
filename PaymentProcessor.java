@@ -16,7 +16,7 @@
 //     }
 // }
 public class PaymentProcessor {
-
+//no voilation of LSP
     // The PaymentProcessor now does not care about the type of payment, just that it implements PaymentMethod.
     public boolean processPayment(PaymentMethod paymentMethod, Customer customer, double amount) {
         if (customer == null) {
