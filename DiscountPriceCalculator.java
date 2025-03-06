@@ -1,4 +1,3 @@
-
 import java.util.List;
 
 public class DiscountPriceCalculator implements PriceCalculator {
@@ -17,4 +16,9 @@ public class DiscountPriceCalculator implements PriceCalculator {
         }
         return totalPrice - (totalPrice * discountPercentage / 100);
     }
+
+    // LSP Not Violated:
+    // - DiscountPriceCalculator correctly implements PriceCalculator.
+    // - It can be used as a substitute for PriceCalculator without breaking functionality.
+    // - It does not change the expected behavior of calculateTotalPrice.
 }
