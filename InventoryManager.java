@@ -1,9 +1,9 @@
-// OCP is not violated because InventoryManager is well-structured and allows extension without modification.
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryManager {
+// OCP is not violated because InventoryManager is well-structured and allows extension without modification.
+
+public class InventoryManager implements InventoryOperations { // Implementing an interface for LSP compliance
     // Before SRP Violation:
     // - The book list was exposed, allowing unwanted changes.
     // - No validation when adding books.
@@ -14,6 +14,7 @@ public class InventoryManager {
     // - A copy of the list is returned to keep the original safe.
     private final List<Book> books = new ArrayList<>();
 
+    @Override
     public void addBook(Book book) {
         if (book != null) {
             books.add(book);
@@ -22,7 +23,19 @@ public class InventoryManager {
         }
     }
 
+    @Override
     public List<Book> getAllBooks() {
         return new ArrayList<>(books);
     }
+
+    // LSP Not Violated:
+    // - InventoryManager follows expected behavior without altering base assumptions.
+    // - It does not introduce unexpected constraints on adding or retrieving books.
+    // - Any subclass extending this class can use addBook() without breaking existing functionality.
+}
+
+// New Interface for LSP Compliance
+interface InventoryOperations {
+    void addBook(Book book);
+    List<Book> getAllBooks();
 }
