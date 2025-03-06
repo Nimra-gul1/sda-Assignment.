@@ -1,4 +1,4 @@
-
+//No LSP violation 
 public class Book {
 
     private final String title;
