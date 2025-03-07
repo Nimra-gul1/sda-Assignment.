@@ -1,23 +1,15 @@
 public class OrderProcessor {
+    private final PriceCalculator priceCalculator; // Now depends on abstraction
 
-    /**
-     * **Before SRP Violation:**
-     * - OrderProcessor was tightly coupled with order details.
-     * - It handled pricing logic, which should be a separate responsibility.
-     * 
-     * **Fix:**
-     * - Now, it only creates orders and delegates price calculation via `PriceCalculator`.
-     */
+    public OrderProcessor(PriceCalculator priceCalculator) {
+        this.priceCalculator = priceCalculator; // Injecting PriceCalculator
+    }
+
     public Order createOrder(Customer customer) {
-        return new Order(customer, new StandardPriceCalculator());  //  Fix: PriceCalculator passed correctly
+        return new Order(customer, priceCalculator); // Now uses the injected instance
     }
 
     public void completeOrder(Order order) {
         order.completeOrder();
     }
-
-    // **LSP Not Violated:**
-    // - `OrderProcessor` creates an `Order` using a `PriceCalculator`, allowing substitution of different implementations.
-    // - Any `PriceCalculator` (e.g., `DiscountPriceCalculator`) can be passed without breaking functionality.
-    // - It does not enforce additional constraints on `Customer` or `Order`, ensuring proper substitution.
 }

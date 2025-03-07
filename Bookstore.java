@@ -1,6 +1,3 @@
-// OCP is not violated since responsibilities are properly delegated and extendable.
-// LSP is maintained because subclasses (e.g., payment methods) follow a common interface and do not break the expected behavior.
-
 public class Bookstore {
     public static void main(String[] args) {
         // Before SRP Violation:
@@ -18,7 +15,9 @@ public class Bookstore {
         // - PaymentProcessor handles payments
 
         InventoryManager inventoryManager = new InventoryManager();
-        OrderProcessor orderProcessor = new OrderProcessor();
+        PriceCalculator priceCalculator = new StandardPriceCalculator(); // Use any implementation
+        OrderProcessor orderProcessor = new OrderProcessor(priceCalculator);
+
         PaymentProcessor paymentProcessor = new PaymentProcessor();
 
         //  LSP Compliance:
@@ -26,8 +25,9 @@ public class Bookstore {
         Admin admin = new Admin("admin", "admin123", inventoryManager);
         Customer customer = new Customer("john_doe", "password123", "john@example.com");
 
-        // LSP Compliance:
-        // PaymentMethod subclasses (CreditCardPayment, PayPalPayment) are used interchangeably without breaking PaymentProcessor.
+        // DIP is NOT violated:
+        // - High-level module (PaymentProcessor) depends on an abstraction (PaymentMethod) instead of concrete implementations.
+        // - We can easily introduce new payment methods without modifying existing logic.
         PaymentMethod creditCard = new CreditCardPayment();
         paymentProcessor.processPayment(creditCard, customer, 100.0);
 
@@ -48,8 +48,9 @@ public class Bookstore {
             new Book("Machine Learning Basics", "Henry Harris", 36.99)
         };
 
-        //  LSP Compliance:
-        // The Admin correctly delegates book management to InventoryManager without changing its behavior.
+        //  DIP is NOT violated:
+        // - Admin interacts with InventoryManager through an abstraction (InventoryOperations) instead of a concrete class.
+        // - InventoryManager implements InventoryOperations, ensuring flexibility for future changes.
         for (Book book : books) {
             admin.addBookToInventory(book);
         }

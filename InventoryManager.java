@@ -3,7 +3,8 @@ import java.util.List;
 
 // OCP is not violated because InventoryManager is well-structured and allows extension without modification.
 
-public class InventoryManager implements InventoryOperations { // Implementing an interface for LSP compliance
+public class InventoryManager implements InventoryOperations { // Implementing an interface for LSP & DIP compliance
+
     // Before SRP Violation:
     // - The book list was exposed, allowing unwanted changes.
     // - No validation when adding books.
@@ -32,9 +33,14 @@ public class InventoryManager implements InventoryOperations { // Implementing a
     // - InventoryManager follows expected behavior without altering base assumptions.
     // - It does not introduce unexpected constraints on adding or retrieving books.
     // - Any subclass extending this class can use addBook() without breaking existing functionality.
+
+    // DIP Not Violated:
+    // - High-level modules depend on the abstraction (InventoryOperations) instead of InventoryManager.
+    // - This allows easy swapping of implementations (e.g., DatabaseInventoryManager, FileInventoryManager).
+    // - Loose coupling improves testability and flexibility.
 }
 
-// New Interface for LSP Compliance
+// New Interface for LSP & DIP Compliance
 interface InventoryOperations {
     void addBook(Book book);
     List<Book> getAllBooks();

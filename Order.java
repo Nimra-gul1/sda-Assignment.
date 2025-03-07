@@ -1,5 +1,3 @@
-// Now, both OCP and SRP violations are resolved!
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,4 +69,9 @@ public class Order {
     // - Order depends on PriceCalculator abstraction, allowing substitution of different pricing strategies.
     // - Substituting any valid PriceCalculator (e.g., DiscountPriceCalculator) does not break Order's behavior.
     // - Order ensures valid inputs (customer cannot be null, books cannot be null) without imposing unexpected restrictions.
+
+    // DIP Not Violated:
+    // - Order class **depends on the abstraction** (`PriceCalculator`) instead of a concrete pricing strategy.
+    // - The pricing strategy is **injected via the constructor**, following dependency inversion.
+    // - New price calculators can be implemented **without modifying the Order class**, ensuring **loose coupling**.
 }
